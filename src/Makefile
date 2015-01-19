@@ -1,0 +1,3 @@
+
+all:
+	echo "Make source"

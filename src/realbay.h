@@ -1,0 +1,61 @@
+
+#ifndef REALBAY_H
+#define REALBAY_H
+
+// Define this if you want debugging
+#define REALBAY_DEBUG
+
+// We want to log IO errors without clutter
+#define realbay_fopen_error(path) \
+	fprintf( \
+		stderr, \
+		"ERROR: Unable to open file %s\n", \
+		path \
+	); 
+	
+#define realbay_io_error(fp, path) \
+	fprintf( \
+		stderr, \
+		"ERROR: Unable to read from file %s at offset %lu\n", \
+		path, \
+		ftell((FILE*)fp) \
+	); \
+	\
+	if (fp != NULL) { \
+		fclose((FILE*)fp); \
+		fp = NULL; \
+	} \
+
+#define realbay_fclose(fp) if (fp) { fclose(fp); fp = NULL; }
+
+// When not in debugging make the debugging functions do nothing
+#ifdef REALBAY_DEBUG
+#define DebugLog(msg) printf("[DEBUG] %s\n", msg)
+#define DebugLogf(msg, args...) printf(msg, args)
+#else
+#define DebugLog(msg)
+#define DebugLogf(msg, args...) 
+#endif
+
+// Execution is redirected throughout the program to different
+// main functions. This is the type definition of those functions
+typedef int (realbay_main_func)(int, const char**);
+
+// Helper macro for main-like function signature
+#define declare_main(name) int name(int argc, const char **argv)
+
+declare_main(realbay_help_main);
+declare_main(realbay_help_usage);
+declare_main(realbay_help_createindex);
+declare_main(realbay_help_hashes);
+
+declare_main(realbay_createindex_main);
+declare_main(realbay_hashes_main);
+
+
+// Main API
+
+int realbay_createindex(const char *csvPath, const char *outputPath);
+int realbay_hashes(const char *indexPath);
+
+#endif // REALBAY_H
