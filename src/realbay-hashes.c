@@ -68,7 +68,7 @@ int realbay_hashes(const char *indexPath) {
 			return 0;
 		}
 		
-		hex_encode(record + 44, hex);
+		hex_encode(record + 44, hex, 20);
 		puts(hex);
 	}
 	

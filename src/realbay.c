@@ -7,6 +7,7 @@ const char *command_table[] = {
 	"help",
 	"createindex",
 	"hashes",
+	"findrecords",
 	NULL
 };
 
@@ -14,10 +15,11 @@ realbay_main_func *function_table[] = {
 	realbay_help_main,
 	realbay_createindex_main,
 	realbay_hashes_main,
+	realbay_findrecords_main,
 	NULL
 };
 
-const int command_count = 3;
+const int command_count = 4;
 
 declare_main(main) {
 	int i = 0;

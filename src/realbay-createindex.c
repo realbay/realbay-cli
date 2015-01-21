@@ -12,8 +12,6 @@
 #define MAX_LINE_LENGTH (1024)
 #define MAX_PIECES (1024 * 8)
 
-sha1hash_t piece_hashes[MAX_PIECES];
-
 declare_main(realbay_help_createindex) {
 	puts(
 		" USAGE: realbay createindex <csv> <output> [OPTIONS] \n"
@@ -151,7 +149,13 @@ int realbay_createindex(const char *csvPath, const char *outputPath) {
 		
 		bloom_clear(&recordBloom);
 		keyword_parse(columns[0].text, keyword_handler);
-		hex_decode(columns[2].text, recordHash);
+		hex_decode(columns[2].text, recordHash, 20);
+		
+		#ifdef REALBAY_DEBUG
+		char test[1024];
+		hex_encode((uint8_t*)recordBloom.words, test, recordBloom.byteCount);
+		fprintf(stderr, "B: 0x%s\n", test);
+		#endif
 		
 		//printf("---\n");
 		

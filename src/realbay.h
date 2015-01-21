@@ -2,6 +2,8 @@
 #ifndef REALBAY_H
 #define REALBAY_H
 
+#include <stdint.h>
+
 // Define this if you want debugging
 #define REALBAY_DEBUG
 
@@ -41,6 +43,8 @@
 // main functions. This is the type definition of those functions
 typedef int (realbay_main_func)(int, const char**);
 
+typedef void (realbay_findrecords_func)(uint8_t *hash);
+
 // Helper macro for main-like function signature
 #define declare_main(name) int name(int argc, const char **argv)
 
@@ -48,14 +52,17 @@ declare_main(realbay_help_main);
 declare_main(realbay_help_usage);
 declare_main(realbay_help_createindex);
 declare_main(realbay_help_hashes);
+declare_main(realbay_help_findrecords);
 
 declare_main(realbay_createindex_main);
 declare_main(realbay_hashes_main);
+declare_main(realbay_findrecords_main);
 
 
 // Main API
 
 int realbay_createindex(const char *csvPath, const char *outputPath);
 int realbay_hashes(const char *indexPath);
+
 
 #endif // REALBAY_H

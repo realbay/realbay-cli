@@ -59,16 +59,20 @@ void hex_encode_byte(const uint8_t value, char *a, char *b) {
 	*b = hex_encode_nibble((value >> 4) & 0x0f);
 }
 
-void hex_decode(const char *hex, uint8_t *bytes) {
+void hex_decode(const char *hex, uint8_t *bytes, const size_t byteCount) {
 	size_t i;
-	size_t pos = 0;
+	size_t pos;
 	uint8_t a, b;
 	
 	if (hex == NULL || hex[0] == '\0') {
 		return;
 	}
 	
-	for (i=0; i < 40; i += 2) {
+	i = 0;
+	pos = 0;
+	
+	//for (i=0; i < 40; i += 2) {
+	while (pos < byteCount) {
 		if (hex[i] == '\0') {
 			break;
 		}
@@ -78,23 +82,24 @@ void hex_decode(const char *hex, uint8_t *bytes) {
 		if (hex[i + 1] == '\0') {
 			b = 0;
 		} else {
-			b = hex_decode_char(hex[i + 1]);
+			b = hex_decode_char(hex[i]);
 		}
 		
 		bytes[pos] = (a) | (b << 4);
 		pos++;
+		i += 2;
 	}
 	
-	while (pos < 20) {
+	while (pos < byteCount) {
 		bytes[pos] = 0;
 		pos++;
 	}
 }
 
-void hex_encode(const uint8_t *bytes, char *hex) {
+void hex_encode(const uint8_t *bytes, char *hex, const size_t byteCount) {
 	size_t i;
 	
-	for (i=0; i < 20; i++) {
+	for (i=0; i < byteCount; i++) {
 		hex_encode_byte(bytes[i], hex, hex + 1);
 		hex += 2;
 	}
