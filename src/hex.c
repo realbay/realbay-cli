@@ -82,7 +82,7 @@ void hex_decode(const char *hex, uint8_t *bytes, const size_t byteCount) {
 		if (hex[i + 1] == '\0') {
 			b = 0;
 		} else {
-			b = hex_decode_char(hex[i]);
+			b = hex_decode_char(hex[i + 1]);
 		}
 		
 		bytes[pos] = (a) | (b << 4);
