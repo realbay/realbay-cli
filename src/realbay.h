@@ -39,6 +39,16 @@
 #define DebugLogf(msg, args...) 
 #endif
 
+#define REALBAY_RECORD_BYTES  (44)
+#define REALBAY_RECORD_BITS   (44 * 8)
+#define REALBAY_RECORD_WORDS  (44 / 4)
+#define REALBAY_RECORD_FUNCS  (7)
+
+#define REALBAY_PIECE_BYTES   (512)
+#define REALBAY_PIECE_BITS    (512 * 8)
+#define REALBAY_PIECE_WORDS   (512 / 4) 
+#define REALBAY_PIECE_FUNCS   (13)
+
 // Execution is redirected throughout the program to different
 // main functions. This is the type definition of those functions
 typedef int (realbay_main_func)(int, const char**);

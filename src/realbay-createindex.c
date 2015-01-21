@@ -67,8 +67,8 @@ int realbay_createindex(const char *csvPath, const char *outputPath) {
 	unsigned int recordCount = 0;
 	unsigned int currentRecord = 0;
 	uint8_t *hash;
-	uint32_t pieceBloomBits[512];
-	uint32_t recordBloomBits[11];
+	uint32_t pieceBloomBits[REALBAY_PIECE_WORDS];
+	uint32_t recordBloomBits[REALBAY_RECORD_WORDS];
 	bloom_t pieceBloom;
 	bloom_t recordBloom;
 	sha1_t hasher;
@@ -128,8 +128,8 @@ int realbay_createindex(const char *csvPath, const char *outputPath) {
 		goto realbay_createindex_error;
 	}
 	
-	bloom_init(&pieceBloom, pieceBloomBits, 512 * 32, 12);
-	bloom_init(&recordBloom, recordBloomBits, 44 * 8, 4);
+	bloom_init(&pieceBloom, pieceBloomBits, REALBAY_PIECE_BITS, REALBAY_PIECE_FUNCS);
+	bloom_init(&recordBloom, recordBloomBits, REALBAY_RECORD_BITS, REALBAY_RECORD_FUNCS);
 	
 	int row_handler(const csv_col_t *columns, const size_t columnCount) {
 		void keyword_handler(const char *keyword, const size_t keywordLen) {
@@ -145,7 +145,7 @@ int realbay_createindex(const char *csvPath, const char *outputPath) {
 		keyword_parse(columns[0].text, keyword_handler);
 		hex_decode(columns[2].text, recordHash, 20);
 		
-		if (fwrite(recordBloomBits, 4, 11, outFile) != 11) {
+		if (fwrite(recordBloomBits, 4, REALBAY_RECORD_WORDS, outFile) != REALBAY_RECORD_WORDS) {
 			realbay_io_error(outFile, outputPath);
 			return 1;
 		}

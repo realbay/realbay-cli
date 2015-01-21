@@ -26,7 +26,7 @@ declare_main(realbay_findrecords_main) {
 	const char *indexPath = NULL;
 	FILE *indexFile = NULL;
 	size_t i;
-	uint32_t searchBloomBits[11];
+	uint32_t searchBloomBits[REALBAY_RECORD_WORDS];
 	bloom_t recordBloom;
 	bloom_t searchBloom;
 	sha1_t hasher;
@@ -55,8 +55,8 @@ declare_main(realbay_findrecords_main) {
 	}
 	
 	DebugLog("Init bloom filters");
-	bloom_init(&recordBloom, NULL, 44 * 8, 4);
-	bloom_init(&searchBloom, searchBloomBits, 44 * 8, 4);
+	bloom_init(&recordBloom, NULL, REALBAY_RECORD_BITS, REALBAY_RECORD_FUNCS);
+	bloom_init(&searchBloom, searchBloomBits, REALBAY_RECORD_BITS, REALBAY_RECORD_FUNCS);
 	
 	DebugLog("Build search filer");
 	
@@ -79,7 +79,7 @@ declare_main(realbay_findrecords_main) {
 		
 		recordBloom.words = (uint32_t*)record;
 		
-		if (bloom_compare(&recordBloom, &searchBloom)) {
+		if (bloom_compare(&searchBloom, &recordBloom)) {
 			hex_encode(record + 44, hex, 20);
 			puts(hex);
 		}
