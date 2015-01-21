@@ -19,7 +19,9 @@ void       bloom_clear(bloom_t *bloom);
 void       bloom_add(bloom_t *bloom, const uint8_t *hash);
 int        bloom_check(bloom_t *bloom, const uint8_t *hash);
 void       bloom_set_bit(bloom_t *bloom, const uint32_t absoluteBit);
+int        bloom_get_bit(bloom_t *bloom, const uint32_t absoluteBit);
 uint32_t   bloom_hash_to_bit(const uint8_t *hash);
+int        bloom_compare(const bloom_t *needle, const bloom_t *haystack);
 
 #endif // REALBAY_BLOOM_H
 
