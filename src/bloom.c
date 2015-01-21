@@ -34,18 +34,25 @@ void bloom_clear(bloom_t *bloom) {
 	uint32_t i; \
 	\
 	sha1_init(&hasher); \
+	digest = hasher; \
 	\
 	for (i=0; i < hashCount; i++) { \
 		if ((i % 5) == 0) { \
+			hasher = digest; \
 			sha1_write(&hasher, hash, 20); \
 			\
 			digest = hasher; \
 			bitHash = sha1_result(&hasher); \
 			bit = bloom_hash_to_bit(bitHash) % bitCount; \
-			hasher = digest; \
 		} else { \
 			bit = bloom_hash_to_bit(bitHash + (i % 5) * 4) % bitCount; \
 		} 
+
+void bloom_add(bloom_t *bloom, const uint8_t *hash) {
+	bloom_eachbit(bloom, hash)
+		bloom_set_bit(bloom, bit);
+	}
+}
 
 int bloom_check(bloom_t *bloom, const uint8_t *hash) {
 	bloom_eachbit(bloom, hash)
@@ -87,12 +94,6 @@ int bloom_compare(const bloom_t *needle, const bloom_t *haystack) {
 	#endif
 	
 	return !empty;
-}
-
-void bloom_add(bloom_t *bloom, const uint8_t *hash) {
-	bloom_eachbit(bloom, hash)
-		bloom_set_bit(bloom, bit);
-	}
 }
 
 uint32_t bloom_hash_to_bit(const uint8_t *hash) {
