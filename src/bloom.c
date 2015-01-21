@@ -41,12 +41,11 @@ void bloom_clear(bloom_t *bloom) {
 			\
 			digest = hasher; \
 			bitHash = sha1_result(&hasher); \
-			\
+			bit = bloom_hash_to_bit(bitHash) % bitCount; \
 			hasher = digest; \
-		} \
-		\
-		bit = bloom_hash_to_bit(bitHash + (i % 5) * 4) % bitCount; 
-
+		} else { \
+			bit = bloom_hash_to_bit(bitHash + (i % 5) * 4) % bitCount; \
+		} 
 
 int bloom_check(bloom_t *bloom, const uint8_t *hash) {
 	bloom_eachbit(bloom, hash)

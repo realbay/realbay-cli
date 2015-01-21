@@ -132,10 +132,6 @@ int realbay_createindex(const char *csvPath, const char *outputPath) {
 	bloom_init(&recordBloom, recordBloomBits, 44 * 8, 4);
 	
 	int row_handler(const csv_col_t *columns, const size_t columnCount) {
-		//if ((currentRecord % 100000) == 0) {
-		//	printf("%d / %d\n", currentRecord, recordCount);
-		//}
-		
 		void keyword_handler(const char *keyword, const size_t keywordLen) {
 			sha1_init(&hasher);
 			sha1_write_str(&hasher, keyword, keywordLen);
@@ -143,21 +139,11 @@ int realbay_createindex(const char *csvPath, const char *outputPath) {
 			
 			bloom_add(&recordBloom, hash);
 			bloom_add(&pieceBloom, hash);
-			
-			//printf("%s\n", keyword);
 		}
 		
 		bloom_clear(&recordBloom);
 		keyword_parse(columns[0].text, keyword_handler);
 		hex_decode(columns[2].text, recordHash, 20);
-		
-		#ifdef REALBAY_DEBUG
-		char test[1024];
-		hex_encode((uint8_t*)recordBloom.words, test, recordBloom.byteCount);
-		fprintf(stderr, "B: 0x%s\n", test);
-		#endif
-		
-		//printf("---\n");
 		
 		if (fwrite(recordBloomBits, 4, 11, outFile) != 11) {
 			realbay_io_error(outFile, outputPath);
